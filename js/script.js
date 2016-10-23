@@ -34,8 +34,37 @@ $nytElem.append('<li class="article">'+'<a href="'+article.web_url+'">'+article.
 
 
 
+}).error(function(e){                                  
+
+$nytHeaderElem.text('NEW YORK TIMES ARTICLE cannt loaded');
+
 });
 
+
+ var wikiurl='http://en.wikipedia.org/w/api.php?action=opensearch&search='+city+'&format=json&callback=wikiCallback';
+
+
+
+var wikitimeout=setTimeout(function(){
+
+ $wikiElem.text('error' );
+},8000);
+
+$.ajax({
+    url:wikiurl,
+    dataType:"jsonp",
+    success:function(response){
+   var articllist=response[1];
+   for(var i=0;i<articllist.length;i++){
+    articlestr=articllist[i];
+    var url='http://en.wikipedia.org/wiki/'+articlestr;
+    $wikiElem.append('<li><a href="'+url+'">'+ articlestr +'</a></li>' );
+
+   };
+
+   clearTimeout(wikitimeout);
+    }
+});
 
 
     return false;
